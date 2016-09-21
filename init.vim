@@ -29,6 +29,10 @@ set background=dark " or light
 colorscheme kalisi
 "colorscheme adrian
 
+"开启高亮光标行
+set cursorline
+"hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+
 " make the highlighting of tabs and other non-text less annoying
 highlight SpecialKey ctermbg=none ctermfg=8
 highlight NonText ctermbg=none ctermfg=8
@@ -74,7 +78,19 @@ set foldnestmax=10          " deepest fold is 10 levels
 set nofoldenable            " don't fold by default
 set foldlevel=1
 
-set clipboard=unnamed
+set clipboard=unnamedplus
+
+" " Copy to clipboard
+vnoremap  <leader>y  "+y
+nnoremap  <leader>Y  "+yg_
+nnoremap  <leader>y  "+y
+nnoremap  <leader>yy  "+yy
+
+" " Paste from clipboard
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
 
 set ttyfast                 " faster redrawing
 set diffopt+=vertical
@@ -130,7 +146,7 @@ nmap <silent> <leader>b :bw<cr>
 nmap <leader>, :w<cr>
 
 " set paste toggle
-set pastetoggle=<leader>p
+set pastetoggle=<f4>
 
 " 复制到系统剪切板
 "
@@ -249,14 +265,24 @@ nmap <silent> <F3> :NERDTreeToggle<cr>
 
 let NERDTreeShowHidden=1
 
+
+" Tagbar {
+let g:tagbar_left = 1
+nnoremap <silent> <F2> :TagbarToggle<CR>
+" }
+
+" deoplete {
+let g:deoplete#enable_at_startup = 1
+" }
+
 let g:fzf_layout = { 'down': '~25%' }
 
 if isdirectory(".git")
     " if in a git project, use :GFiles
-    nmap <silent> <leader>t :GFiles<cr>
+    "nmap <silent> <leader>t :GFiles<cr>
 else
     " otherwise, use :FZF
-    nmap <silent> <leader>t :FZF<cr>
+    "nmap <silent> <leader>t :FZF<cr>
 endif
 
 nmap <silent> <leader>r :Buffers<cr>
@@ -313,7 +339,7 @@ let g:neomake_typescript_tsc_maker = {
         \ '%C%\s%\+%m'
 \ }
 
-" airline options
+" airline options {
 let g:airline_powerline_fonts=1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -323,6 +349,18 @@ let g:airline#extensions#tabline#tab_min_count = 2 " only show tabline if tabs a
 let g:airline#extensions#tabline#show_buffers = 0 " do not show open buffers in tabline
 let g:airline#extensions#tabline#show_splits = 0
 
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#tagbar#flags = 's'
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#bufferline#enabled = 1
+
+function! MyOverride(...)
+    call airline#parts#define_accent('Title', 'green')
+    call a:1.add_section('Title','dec:%b hex:0x%B ')
+endfunction
+
+call airline#add_statusline_func('MyOverride')
+" }
 
 " don't hide quotes in json files
 let g:vim_json_syntax_conceal = 0
@@ -513,11 +551,11 @@ endfunction"}}}
 "nnoremap <silent><C-p> :Unite -no-split -start-insert file_rec buffer<CR>
 "nnoremap <leader>mm :Unite -auto-resize file file_mru file_rec<cr>
 nnoremap <leader>mm :Unite   -no-split -start-insert   file file_mru file_rec buffer<cr>
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
-nnoremap <leader>tf :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
+nnoremap <leader>ut :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
+nnoremap <leader>uf :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
 nnoremap <leader>mr :<C-u>Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
 nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
-nnoremap <leader>tb :<C-u>Unite -no-split -buffer-name=buffer_tab  buffer_tab<cr>
+nnoremap <leader>ub :<C-u>Unite -no-split -buffer-name=buffer_tab  buffer_tab<cr>
 
 "" shortcup for key mapping
 nnoremap <silent><leader>u  :<C-u>Unite -start-insert mapping<CR>
@@ -558,7 +596,7 @@ nnoremap <leader>o :<C-u>Unite -buffer-name=outline   -start-insert -auto-previe
 nnoremap <leader>l :Unite line -start-insert  -auto-preview -no-split<CR>
 
 "" Yank history
-nnoremap <leader>y :<C-u>Unite -no-split -auto-preview -buffer-name=yank history/yank<cr>
+nnoremap <leader>uy :<C-u>Unite -no-split -auto-preview -buffer-name=yank history/yank<cr>
 "nnoremap <space>y :Unite history/yank<cr>
 
 
@@ -621,6 +659,139 @@ nnoremap <silent> <leader>ul  :<C-u>Unite -buffer-name=gitlog   gitlog<cr>
 
 " }}}
 
+"for cscope {{{
 
+if has("cscope") && filereadable("/usr/bin/cscope")
+    set csprg=/usr/bin/cscope
+    set csto=0
+    set cst
+    set nocsverb
+    " add any database in current directory
+    if filereadable("cscope.out")
+       "cs add cscope.out $PROJ
+    " else add database pointed to by environment
+    elseif $CSCOPE_DB != ""
+       cs add $CSCOPE_DB $PROJ
+    endif
+    set csverb
+endif
+"cscope设置
+"set cscopequickfix=s-,c-,d-,i-,t-,e-
+
+"nmap s :cs find s =expand("") 
+" :cw    "查找声明
+"nmap g :cs find g =expand("") 
+":cw     "查找定义
+"nmap c :cs find c =expand("") eyBi
+":cw    "查找调用
+"nmap t :cs find t =expand("") :cw    
+"查找指定的字符串
+"nmap e :cs find e =expand("") 
+":cw    "查找egrep模式，相当于egrep功能，但查找速度快多了
+"nmap f :cs find f =expand("") 
+":cw    "查找文件
+"nmap i :cs find i ^=expand("")$ 
+":cw   "查找包含本文件的文件
+"nmap d :cs find d =expand("")  
+":cw   "查找本函数调用的函数
+nmap <leader>sa :cs add cscope.out<cr>
+nmap <leader>sq :cs add $CSCOPE_DB $PROJ<cr>
+
+nmap <leader>sba :cs add /home/chenchunsheng/qc4.4_20140513/packages/cscope.out /home/chenchunsheng/qc4.4_20140513/packages <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/development/cscope.out /home/chenchunsheng/qc4.4_20140513/development <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/vendor/cscope.out /home/chenchunsheng/qc4.4_20140513/vendor <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/external/cscope.out /home/chenchunsheng/qc4.4_20140513/external <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/frameworks/cscope.out /home/chenchunsheng/qc4.4_20140513/frameworks <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/system/cscope.out /home/chenchunsheng/qc4.4_20140513/system <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/hardware/cscope.out /home/chenchunsheng/qc4.4_20140513/hardware <cr>
+            \:cs add /home/chenchunsheng/workdir/mysql/cscope.out /home/chenchunsheng/workdir/mysql <cr>
+            \:cs add /home/chenchunsheng/workdir/mysql-5.6.22/cscope.out /home/chenchunsheng/workdir/mysql-5.6.22 <cr>
+
+nmap <leader>sbb :cs add /home/chenchunsheng/code_android/t2_new_20150918/packages/cscope.out /home/chenchunsheng/code_android/t2_new_20150918/packages <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/development/cscope.out /home/chenchunsheng/qc4.4_20140513/development <cr>
+            \:cs add /home/chenchunsheng/code_android/t2_new_20150918/vendor/cscope.out /home/chenchunsheng/code_android/t2_new_20150918/vendor <cr>
+            \:cs add /home/chenchunsheng/code_android/t2_new_20150918/external/cscope.out /home/chenchunsheng/code_android/t2_new_20150918/external <cr>
+            \:cs add /home/chenchunsheng/code_android/t2_new_20150918/frameworks/cscope.out /home/chenchunsheng/code_android/t2_new_20150918/frameworks <cr>
+            \:cs add /home/chenchunsheng/code_android/t2_new_20150918/system/cscope.out /home/chenchunsheng/code_android/t2_new_20150918/system <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/hardware/cscope.out /home/chenchunsheng/qc4.4_20140513/hardware <cr>
+            \:cs add /home/chenchunsheng/workdir/mysql/cscope.out /home/chenchunsheng/workdir/mysql <cr>
+            \:cs add /home/chenchunsheng/workdir/mysql-5.6.22/cscope.out /home/chenchunsheng/workdir/mysql-5.6.22 <cr>
+
+nmap <leader>sbc :
+            \:cs add /home/chenchunsheng/code_android/u1-l-rom/external/cscope.out /home/chenchunsheng/code_android/u1-l-rom/external <cr>
+            \:cs add /home/chenchunsheng/code_android/u1-l-rom/frameworks/cscope.out /home/chenchunsheng/code_android/u1-l-rom/frameworks <cr>
+
+nmap <leader>sbd :cs add /home/chenchunsheng/code_android/t2_new_20150918/packages/cscope.out /home/chenchunsheng/code_android/t2_new_20150918/packages <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/development/cscope.out /home/chenchunsheng/qc4.4_20140513/development <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/external/cscope.out /data/code/surabaya-rebase-20160506/external <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/frameworks/cscope.out /data/code/surabaya-rebase-20160506/frameworks <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/system/cscope.out /data/code/surabaya-rebase-20160506/system <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/vendor/cscope.out /data/code/surabaya-rebase-20160506/vendor <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/hardware/cscope.out /data/code/surabaya-rebase-20160506/hardware <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/libcore/cscope.out /data/code/surabaya-rebase-20160506/libcore <cr>
+
+nmap <leader>sbe :cs add /home/chenchunsheng/code_android/t2_new_20150918/packages/cscope.out /home/chenchunsheng/code_android/t2_new_20150918/packages <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/development/cscope.out /home/chenchunsheng/qc4.4_20140513/development <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/external/cscope.out /data/code/surabaya-rebase-20160506/external <cr>
+            \:cs add /data/code/bono-rom/frameworks/cscope.out /data/code/bono-rom/frameworks <cr>
+            \:cs add /data/code/surabaya-rebase-20160506/system/cscope.out /data/code/surabaya-rebase-20160506/system <cr>
+            \:cs add /data/code/bono-rom/vendor/cscope.out /data/code/bono-rom/vendor <cr>
+            \:cs add /home/chenchunsheng/qc4.4_20140513/hardware/cscope.out /home/chenchunsheng/qc4.4_20140513/hardware <cr>
+
+nmap <leader>sm :cs show<cr>
+
+
+nmap <leader>ss :cs find s <C-R>=expand("<cword>")<cr><cr>
+nmap <leader>sg :cs find g <C-R>=expand("<cword>")<cr><cr>
+nmap <leader>sc :cs find c <C-R>=expand("<cword>")<cr><cr>
+nmap <leader>st :cs find t <C-R>=expand("<cword>")<cr><cr>
+nmap <leader>se :cs find e <C-R>=expand("<cword>")<cr><cr>
+nmap <leader>sf :cs find f <C-R>=expand("<cfile>")<cr><cr>
+nmap <leader>si :cs find i <C-R>=expand("<cfile>")<cr><cr>
+nmap <leader>sd :cs find d <C-R>=expand("<cword>")<cr><cr>
+
+"nmap <F12> :call RunShell("Generate cscope", "cscope -Rb")<cr>:cs add cscope.out<cr>
+
+" }}}
+
+"for ctrlp-z {{{
+let g:ctrlp_z_nerdtree = 1
+let g:ctrlp_extensions = ['Z', 'F']
+nnoremap sz :CtrlPZ<cr><cr>
+nnoremap sf :CtrlPF<cr>
+"}}}
+
+
+" neoterm {{{
+"let g:neoterm_position = 'horizontal'
+let g:neoterm_position = 'vertical'
+let g:neoterm_automap_keys = ',tt'
+
+nnoremap <silent> <f10> :TREPLSendFile<cr>
+nnoremap <silent> <f9> :TREPLSendLine<cr>
+vnoremap <silent> <f9> :TREPLSendSelection<cr>
+
+" run set test lib
+nnoremap <silent> ,rt :call neoterm#test#run('all')<cr>
+nnoremap <silent> ,rf :call neoterm#test#run('file')<cr>
+nnoremap <silent> ,rn :call neoterm#test#run('current')<cr>
+nnoremap <silent> ,rr :call neoterm#test#rerun()<cr>
+
+" Useful maps
+" hide/close terminal
+nnoremap <silent> ,th :call neoterm#close()<cr>
+" clear terminal
+nnoremap <silent> ,tl :call neoterm#clear()<cr>
+" kills the current job (send a <c-c>)
+nnoremap <silent> ,tc :call neoterm#kill()<cr>
+
+" Rails commands
+command! Troutes :T rake routes
+command! -nargs=+ Troute :T rake routes | grep <args>
+command! Tmigrate :T rake db:migrate
+
+" Git commands
+command! -nargs=+ Tg :T git <args>
+" }}}
 
 " vim:foldmethod=marker:foldlevel=0
