@@ -1,0 +1,5 @@
+.dein/
+*.swp
+.netrwhist
+dotfiles/
+plugged/
