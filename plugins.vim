@@ -19,11 +19,15 @@ Plug 'Shougo/unite-session'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' } " interactive command execution in vim
 Plug 'chemzqm/vim-easygit'
 Plug 'chemzqm/unite-git-log'
+Plug 'airblade/vim-gitgutter'
+Plug 'tyru/open-browser.vim'
 
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
 Plug 'kassio/neoterm'
+Plug 'vim-scripts/buftabs'
+Plug 'Shougo/tabpagebuffer.vim'
 
 " code complete
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }

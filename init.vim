@@ -81,9 +81,9 @@ set foldlevel=1
 set clipboard=unnamedplus
 
 " " Copy to clipboard
-vnoremap  <leader>y  "+y
+vnoremap  m  "+y
 nnoremap  <leader>Y  "+yg_
-nnoremap  <leader>y  "+y
+nnoremap  m  "+y
 nnoremap  <leader>yy  "+yy
 
 " " Paste from clipboard
@@ -341,12 +341,12 @@ let g:neomake_typescript_tsc_maker = {
 
 " airline options {
 let g:airline_powerline_fonts=1
-let g:airline_left_sep=''
-let g:airline_right_sep=''
+"let g:airline_left_sep=''
+"let g:airline_right_sep=''
 let g:airline_theme='kalisi'  "'dracula'
 let g:airline#extensions#tabline#enabled = 1 " enable airline tabline
 let g:airline#extensions#tabline#tab_min_count = 2 " only show tabline if tabs are being used (more than 1 tab open)
-let g:airline#extensions#tabline#show_buffers = 0 " do not show open buffers in tabline
+let g:airline#extensions#tabline#show_buffers = 1 " do not show open buffers in tabline
 let g:airline#extensions#tabline#show_splits = 0
 
 let g:airline#extensions#tagbar#enabled = 1
@@ -793,5 +793,51 @@ command! Tmigrate :T rake db:migrate
 " Git commands
 command! -nargs=+ Tg :T git <args>
 " }}}
+
+"for buftabs {{{
+noremap <Leader>bp :bprev<CR>
+noremap <Leader>bn :bnext<CR>
+"}}}
+
+
+"for open-browser {{{
+" This is my setting. 
+let g:netrw_nogx = 1 " disable netrw's gx mapping. 
+"nmap gx <Plug>(openbrowser-smart-search) 
+"vmap gx <Plug>(openbrowser-smart-search) 
+
+
+"" Open URI under cursor. 
+nmap go <Plug>(openbrowser-open) 
+"" Open selected URI. 
+vmap go <Plug>(openbrowser-open) 
+
+" Search word under cursor. 
+nmap gs <Plug>(openbrowser-search) 
+" Search selected word. 
+vmap gs <Plug>(openbrowser-search) 
+
+" If it looks like URI, Open URI under cursor. 
+" Otherwise, Search word under cursor. 
+nmap gx <Plug>(openbrowser-smart-search) 
+" If it looks like URI, Open selected URI. 
+" Otherwise, Search selected word. 
+vmap gx <Plug>(openbrowser-smart-search) 
+
+vnoremap gob :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
+nnoremap gob :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
+
+vnoremap gog :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
+nnoremap gog :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
+
+vnoremap goi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
+nnoremap goi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
+" In command-line 
+":OpenBrowser http://google.com/ 
+":OpenBrowserSearch ggrks 
+":OpenBrowserSmartSearch http://google.com/ 
+":OpenBrowserSmartSearch ggrks 
+"}}}
+
 
 " vim:foldmethod=marker:foldlevel=0
