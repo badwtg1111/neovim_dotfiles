@@ -34,6 +34,13 @@ Plug 'arakashic/chromatica.nvim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'vhakulinen/neovim-intellij-complete-deoplete'
 Plug 'artur-shaik/vim-javacomplete2'
+Plug 'Valloric/YouCompleteMe'
+
+" Track the engine.
+Plug 'SirVer/ultisnips'
+
+" Snippets are separated from the engine. Add this if you want them:
+Plug 'honza/vim-snippets'
 
 " utilities
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder, mapped to <leader>t

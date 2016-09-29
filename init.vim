@@ -847,4 +847,14 @@ autocmd FileType java setlocal omnifunc=javacomplete#Complete
 let g:chromatica#libclang_path='/usr/lib/llvm-3.9/lib'
 " }}}
 
+" ultisnips {{{
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-m>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+" }}}
+
 " vim:foldmethod=marker:foldlevel=0
