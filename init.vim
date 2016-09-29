@@ -550,7 +550,7 @@ endfunction"}}}
 
 "nnoremap <silent><C-p> :Unite -no-split -start-insert file_rec buffer<CR>
 "nnoremap <leader>mm :Unite -auto-resize file file_mru file_rec<cr>
-nnoremap <leader>mm :Unite   -no-split -start-insert   file file_mru file_rec buffer<cr>
+nnoremap <leader>mm :Unite   -no-split -start-insert   file  file_rec/async:! <cr>
 nnoremap <leader>ut :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
 nnoremap <leader>uf :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
 nnoremap <leader>mr :<C-u>Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
@@ -839,5 +839,12 @@ nnoremap goi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>"
 ":OpenBrowserSmartSearch ggrks 
 "}}}
 
+" javacomplete2 {{{
+autocmd FileType java setlocal omnifunc=javacomplete#Complete
+" }}}
+
+" chromatica {{{
+let g:chromatica#libclang_path='/usr/lib/llvm-3.9/lib'
+" }}}
 
 " vim:foldmethod=marker:foldlevel=0

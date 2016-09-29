@@ -28,10 +28,12 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'kassio/neoterm'
 Plug 'vim-scripts/buftabs'
 Plug 'Shougo/tabpagebuffer.vim'
+Plug 'arakashic/chromatica.nvim'
 
 " code complete
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'vhakulinen/neovim-intellij-complete-deoplete'
+Plug 'artur-shaik/vim-javacomplete2'
 
 " utilities
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder, mapped to <leader>t
