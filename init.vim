@@ -738,6 +738,9 @@ nmap <leader>sbe :cs add /home/chenchunsheng/code_android/t2_new_20150918/packag
             \:cs add /data/code/bono-rom/vendor/cscope.out /data/code/bono-rom/vendor <cr>
             \:cs add /home/chenchunsheng/qc4.4_20140513/hardware/cscope.out /home/chenchunsheng/qc4.4_20140513/hardware <cr>
 
+nmap <leader>sbf :
+			\:cs add /data/code/a1-n/external/cscope.out /data/code/a1-n/external <cr>
+			
 nmap <leader>sm :cs show<cr>
 
 
@@ -856,5 +859,9 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 " }}}
+
+"for indentLine {{{
+let g:indentLine_color_term = 112
+"}}}
 
 " vim:foldmethod=marker:foldlevel=0

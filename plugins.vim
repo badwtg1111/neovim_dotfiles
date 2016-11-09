@@ -29,6 +29,7 @@ Plug 'kassio/neoterm'
 Plug 'vim-scripts/buftabs'
 Plug 'Shougo/tabpagebuffer.vim'
 Plug 'arakashic/chromatica.nvim'
+Plug 'Yggdroot/indentLine'
 
 " code complete
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -56,6 +57,7 @@ Plug 'tpope/vim-commentary' " comment stuff out
 Plug 'tpope/vim-unimpaired' " mappings which are simply short normal mode aliases for commonly used ex commands
 Plug 'tpope/vim-endwise' " automatically add end in ruby
 Plug 'tpope/vim-ragtag' " endings for html, xml, etc. - ehances surround
+Plug 'sukima/xmledit'
 Plug 'tpope/vim-surround' " mappings to easily delete, change and add such surroundings in pairs, such as quotes, parens, etc.
 Plug 'benmills/vimux' " tmux integration for vim
 Plug 'vim-airline/vim-airline' " fancy statusline
